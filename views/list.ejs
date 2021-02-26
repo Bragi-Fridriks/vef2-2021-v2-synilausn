@@ -1,6 +1,7 @@
 
 <section class="registrations">
   <h2 class="registrations__title">Undirskriftir</h2>
+  <h3 class="registrations__count">Fjöldi undirskrifta: <%= nrofreg.length %></h3>
 
   <% if (registrations.length === 0) { %>
     <p class="registrations__empty">Engar undirskriftir.</p>
@@ -21,4 +22,13 @@
       </tr>
     </table>
   <% } %>
+  <tr>
+    <% if(offset > 0) { %>
+    <p><a href="/?offset=<%=offset - limit%>&limit=<%=limit%>">Fyrri síða</a></p>
+    <% } %>
+    <% if((offset/50)+1 != Math.ceil(nrofreg.length/50)) { %> 
+    <p><a href="/?offset=<%=offset + limit%>&limit=<%=limit%>">Næsta síða</a></p>
+    <% } %>
+    <p>Síða <%= (offset/50)+1 %> af <%= Math.ceil(nrofreg.length/50) %></p>
+  </tr>
 </section>

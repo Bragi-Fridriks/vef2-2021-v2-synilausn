@@ -2,7 +2,7 @@ import express from 'express';
 import { body, validationResult } from 'express-validator';
 import xss from 'xss';
 
-import { list, insert } from './db.js';
+import { list, insert, count } from './db.js';
 
 export const router = express.Router();
 
@@ -25,10 +25,15 @@ async function index(req, res) {
     comment: '',
   };
 
-  const registrations = await list();
+  let { offset = 0, limit = 50 } = req.query;
+  offset = Number(offset);
+  limit = Number(limit);
+
+  const registrations = await list(offset, limit);
+  const nrofreg = await count();
 
   res.render('index', {
-    errors, formData, registrations,
+    errors, formData, registrations, offset, limit, nrofreg
   });
 }
 
