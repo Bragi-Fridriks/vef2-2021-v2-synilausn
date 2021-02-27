@@ -19,7 +19,7 @@ import {
 
 dotenv.config();
 
-const sessionSecret = 'leyndarmál';
+const sessionSecret = '489vlkS4jvhpakjv.,mnzjhDF4i1!';
 
 const {
   PORT: port = 3000,
