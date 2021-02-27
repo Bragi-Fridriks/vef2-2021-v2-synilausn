@@ -1,21 +1,27 @@
 import { readFile } from 'fs/promises';
-import { query, end } from './db.js';
 import faker from 'faker';
+import { query, end } from './db.js';
 
 const schemaFile = './sql/schema.sql';
 
 async function mock(n) {
   for (let i = 0; i < n; i++) {
     const name = faker.name.findName();
-    const nationalId = Math.floor(Math.random()*10000000000);
-    const comment = faker.lorem.sentence();
+    const nationalId = Math.floor(Math.random() * 10000000000);
+    const comment = (() => {
+      if (faker.random.boolean()) {
+        return faker.lorem.sentence();
+      }
+      return '';
+    })();
     const anonymous = faker.random.boolean();
+    const signed = faker.date.between('2021-02-13', '2021-02-27');
 
     const q = `
-      INSERT INTO signatures (name, nationalId, comment, anonymous)
-      VALUES ($1, $2, $3, $4)`;
+      INSERT INTO signatures (name, nationalId, comment, anonymous, signed)
+      VALUES ($1, $2, $3, $4, $5)`;
 
-    await query(q, [name, nationalId, comment, anonymous]);
+    await query(q, [name, nationalId, comment, anonymous, signed]);
   }
 }
 

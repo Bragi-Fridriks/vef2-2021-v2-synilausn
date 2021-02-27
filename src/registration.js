@@ -33,7 +33,7 @@ async function index(req, res) {
   const nrofreg = await count();
 
   res.render('index', {
-    errors, formData, registrations, offset, limit, nrofreg
+    errors, formData, registrations, offset, limit, nrofreg,
   });
 }
 

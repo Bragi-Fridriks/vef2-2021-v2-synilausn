@@ -2,21 +2,119 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 import express from 'express';
+import passport from 'passport';
+import session from 'express-session';
 import dotenv from 'dotenv';
 import { format } from 'date-fns';
+import { Strategy } from 'passport-local';
 
 import { router as registrationRouter } from './registration.js';
+import { router as adminRouter } from './admin.js';
+
+import {
+  comparePasswords,
+  findByUsername,
+  findById,
+} from './users.js';
 
 dotenv.config();
 
 const {
   PORT: port = 3000,
+  SESSION_SECRET: sessionSecret,
 } = process.env;
 
 const app = express();
 
 // Sér um að req.body innihaldi gögn úr formi
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: sessionSecret,
+  resave: false,
+  saveUninitialized: false,
+}));
+
+async function strat(username, password, done) {
+  try {
+    const user = await findByUsername(username);
+
+    if (!user) {
+      return done(null, false);
+    }
+
+    // Verður annað hvort notanda hlutur ef lykilorð rétt, eða false
+    const result = await comparePasswords(password, user.password);
+
+    return done(null, result ? user : false);
+  } catch (err) {
+    console.error(err);
+    return done(err);
+  }
+}
+
+passport.use(new Strategy(strat));
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await findById(id);
+    return done(null, user);
+  } catch (error) {
+    return done(error);
+  }
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+function ensureLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  return res.redirect('/login');
+}
+
+app.get('/login', (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.redirect('/');
+  }
+
+  let message = '';
+
+  // Athugum hvort einhver skilaboð séu til í session, ef svo er birtum þau
+  // og hreinsum skilaboð
+  if (req.session.messages && req.session.messages.length > 0) {
+    message = req.session.messages.join(', ');
+    req.session.messages = [];
+  }
+
+  return res.render('login', { message });
+});
+
+app.post(
+  '/login',
+  passport.authenticate('local', {
+    failureMessage: 'Notandanafn eða lykilorð vitlaust.',
+    failureRedirect: '/login',
+  }),
+  (req, res) => {
+    res.redirect('/admin');
+  },
+);
+
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
+
+app.get('/deleteRow', ensureLoggedIn, (req, res) => {
+  console.log('id: ', req.id );
+  res.redirect('/admin');
+});
 
 const path = dirname(fileURLToPath(import.meta.url));
 
@@ -53,6 +151,7 @@ app.locals.formatDate = (str) => {
 };
 
 app.use('/', registrationRouter);
+app.use('/admin', ensureLoggedIn, adminRouter);
 
 /**
  * Middleware sem sér um 404 villur.

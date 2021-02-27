@@ -66,6 +66,21 @@ export async function insert({
   return success;
 }
 
+export async function deleter(nationalId) {
+  let success = true;
+
+  const q = 'DELETE FROM signatures WHERE nationalID = $1';
+
+  try {
+    await query(q, nationalId);
+  } catch (e) {
+    console.error('Error inserting signature', e);
+    success = false;
+  }
+
+  return success;
+}
+
 /**
  * List all registrations from the registration table.
  *
@@ -90,7 +105,7 @@ export async function list(offset = 0, limit = 50) {
 export async function count() {
   let result = 0;
   try {
-    const queryResult = await query('SELECT * FROM signatures ',);
+    const queryResult = await query('SELECT * FROM signatures ');
 
     if (queryResult && queryResult.rows) {
       result = queryResult.rows;
