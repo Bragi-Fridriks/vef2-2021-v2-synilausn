@@ -68,3 +68,13 @@ export async function findById(id) {
 
   return null;
 }
+
+export async function createUser(username, password) {
+  const hashedPassword = await bcrypt.hash(password, 11);
+  const q = `
+  INSERT INTO
+  users (username, password)
+  VALUES ($1, $2)`;
+
+  return query(q, [username, hashedPassword]);
+}

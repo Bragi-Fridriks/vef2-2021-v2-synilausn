@@ -24,7 +24,7 @@
                 <td class="date"><%= formatDate(row.signed) %></td>
                 <td class="name"><%= row.anonymous ? 'Nafnlaust' : row.name %></td>
                 <td class="comment"><%= row.comment %></td>
-                <td class="delete"><button>Eyða</button></td>
+                <td class="delete"> <form style = "all: revert;" method="post" name = "<%= row.id %>" action="/admin/delete" enctype="application/x-www-form-urlencoded"> <input hidden class ="id" name = "id" id = "id" value = <%= row.id %>></input><button class = "remove">Eyða</button> </form></td>
             </tr>
         <% }) %>
         </tr>

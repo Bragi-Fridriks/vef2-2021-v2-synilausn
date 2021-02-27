@@ -1,6 +1,7 @@
 import { readFile } from 'fs/promises';
 import faker from 'faker';
 import { query, end } from './db.js';
+import { createUser } from './users.js';
 
 const schemaFile = './sql/schema.sql';
 
@@ -33,6 +34,8 @@ async function create() {
   console.info('Schema created');
 
   await mock(500);
+
+  await createUser('admin', '123');
 
   console.info('Mock data created');
 
