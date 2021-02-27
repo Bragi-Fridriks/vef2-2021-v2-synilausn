@@ -189,7 +189,19 @@ button:hover {
   overflow-wrap: anywhere;
 }
 
+.registrations__table button {
+  font-size: 1rem;
+}
+
 .registrations__count {
   font-size: 1rem;
   margin-bottom: 1rem;
+}
+
+.paging {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  width: 100%;
 }

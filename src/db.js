@@ -66,15 +66,22 @@ export async function insert({
   return success;
 }
 
-export async function deleter(nationalId) {
+/**
+ * Remove a registration from the registration table.
+ *
+ * @param {string} entry.nationalId – National ID of registrant
+ * @returns {Promise<boolean>} Promise, resolved as true if inserted, otherwise false
+ */
+export async function deleteRow({
+  nationalId,
+} = {}) {
   let success = true;
 
-  const q = 'DELETE FROM signatures WHERE nationalID = $1';
-
+  const q = 'DELETE FROM signatures WHERE id = $1';
   try {
-    await query(q, nationalId);
+    await query(q, [nationalId]);
   } catch (e) {
-    console.error('Error inserting signature', e);
+    console.error('Error deleting signature', e);
     success = false;
   }
 

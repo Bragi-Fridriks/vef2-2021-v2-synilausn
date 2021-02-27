@@ -22,13 +22,17 @@
       </tr>
     </table>
   <% } %>
-  <tr>
-    <% if(offset > 0) { %>
-    <p><a href="/?offset=<%=offset - limit%>&limit=<%=limit%>">Fyrri síða</a></p>
-    <% } %>
-    <% if((offset/50)+1 != Math.ceil(nrofreg.length/50)) { %> 
-    <p><a href="/?offset=<%=offset + limit%>&limit=<%=limit%>">Næsta síða</a></p>
-    <% } %>
-    <p>Síða <%= (offset/50)+1 %> af <%= Math.ceil(nrofreg.length/50) %></p>
-  </tr>
 </section>
+<div class="paging">
+  <% if(offset > 0) { %>
+    <p><a href="/?offset=<%=offset - limit%>&limit=<%=limit%>">Fyrri síða</a></p>
+  <% } else { %>
+    <p></p>
+  <% } %>
+  <p>Síða <%= (offset/50)+1 %> af <%= Math.ceil(nrofreg.length/50) %></p>
+  <% if((offset/50)+1 != Math.ceil(nrofreg.length/50)) { %> 
+    <p><a href="/?offset=<%=offset + limit%>&limit=<%=limit%>">Næsta síða</a></p>
+  <% } else { %>
+    <p></p>
+  <% } %>
+</div>

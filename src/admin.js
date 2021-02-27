@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { list, count, deleter } from './db.js';
+import { list, count, deleteRow } from './db.js';
 
 export const router = express.Router();
 
@@ -30,21 +30,26 @@ async function admin(req, res) {
 }
 
 async function erase(req, res) {
-  const nationalId = req.body;
-
-  let success = true;
-
-  try {
-    success = await deleter(nationalId);
-  } catch (e) {
-    console.error(e);
+    const {
+      nationalId,
+    } = req.body;
+  
+    let success = true;
+  
+    try {
+      success = await deleteRow({
+        nationalId,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  
+    if (success) {
+      return res.redirect('/admin');
+    }
+  
+    return res.render('error', { title: 'Gat ekki eytt!', text: 'Hafðir þú eytt áður?' });
   }
-
-  if (success) {
-    return res.redirect('/admin');
-  }
-
-  return res.render('error', { title: 'Gat ekki eytt!' });
-}
 
 router.get('/', catchErrors(admin));
+router.post('/', catchErrors(erase));

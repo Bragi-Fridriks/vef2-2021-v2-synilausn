@@ -19,9 +19,10 @@ import {
 
 dotenv.config();
 
+const sessionSecret = 'leyndarmál';
+
 const {
   PORT: port = 3000,
-  SESSION_SECRET: sessionSecret,
 } = process.env;
 
 const app = express();
@@ -109,11 +110,6 @@ app.post(
 app.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
-});
-
-app.get('/deleteRow', ensureLoggedIn, (req, res) => {
-  console.log('id: ', req.id );
-  res.redirect('/admin');
 });
 
 const path = dirname(fileURLToPath(import.meta.url));
