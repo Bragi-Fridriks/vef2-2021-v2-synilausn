@@ -30,26 +30,26 @@ async function admin(req, res) {
 }
 
 async function erase(req, res) {
-    if (!req.isAuthenticated()) {
-      return res.redirect('/admin/login');
-    }
-    const {
-      id,
-    } = req.body;
-  
-    let success = true;
-    try {
-      success = await deleteRow({ nationalId: id });
-    } catch (e) {
-      console.error(e);
-    }
-    if (success) {
-      return res.redirect('/admin');
-    }
-    return res.render('error', {
-      title: 'Villa við að eyða',
-      text: '',
-    });
+  if (!req.isAuthenticated()) {
+    return res.redirect('/admin/login');
+  }
+  const {
+    id,
+  } = req.body;
+
+  let success = true;
+  try {
+    success = await deleteRow({ nationalId: id });
+  } catch (e) {
+    console.error(e);
+  }
+  if (success) {
+    return res.redirect('/admin');
+  }
+  return res.render('error', {
+    title: 'Villa við að eyða',
+    text: '',
+  });
 }
 
 router.get('/', catchErrors(admin));

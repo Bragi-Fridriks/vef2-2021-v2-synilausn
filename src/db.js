@@ -96,7 +96,7 @@ export async function deleteRow({
 export async function list(offset = 0, limit = 50) {
   let result = [];
   try {
-    const q = 'SELECT name, nationalId, comment, anonymous, signed FROM signatures ORDER BY signed DESC OFFSET $1 LIMIT $2';
+    const q = 'SELECT * FROM signatures ORDER BY signed DESC OFFSET $1 LIMIT $2';
     const queryResult = await query(q, [offset, limit]);
 
     if (queryResult && queryResult.rows) {

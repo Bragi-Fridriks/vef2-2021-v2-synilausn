@@ -32,7 +32,7 @@
     <% } %>
   </section>
 
-  <div class="paging">
+  <section class="paging">
     <% if(offset > 0) { %>
     <p><a href="/admin/?offset=<%=offset - limit%>&limit=<%=limit%>">Fyrri síða</a></p>
     <% } else { %>
@@ -44,6 +44,6 @@
     <% } else { %>
         <p></p>
     <% } %>
-  <div>
+    </section>
 
 <%- include('footer') -%>
