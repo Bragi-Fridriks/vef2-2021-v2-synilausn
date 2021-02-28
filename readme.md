@@ -12,11 +12,6 @@ node ./src/setup.js # eða npm run setup
 npm run dev
 ```
 
-Uppsetning á heroku, gefið að appið sé til undir nafninu <APP> og þú sért loggedin á heroku cli:
+Heroku linkur:
 
-```bash
-heroku git:remote -a <APP>
-heroku addons:create heroku-postgresql:hobby-dev
-git push heroku main
-heroku run npm run setup
-```
+https://brf6-vef2-2021-v3.herokuapp.com/
